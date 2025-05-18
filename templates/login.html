@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WATERFLOW Smart Water Advisor</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=vXp95Gy3oBoCLT5cIbnIysNa_k6MMOamALxHOe1WplU9GFzURLMhQvqU9TCJmlBend57PpezM4G-2b6siVw0vLqRif4CK5XS7LSpGdlprLPThauoucROEYURZWK5usORoBvMzFVR-suBgfdwKcvOJxFUYgVVGdOfFYbV_vSo-OZLCDi0JCrMII0Bh_6EeW1rnR6enSMIY3dLssDhlj-McQ" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .login-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            height: 550px;
+        }
+        
+        .login-form-container {
+            padding: 40px;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-image {
+            width: 50%;
+            background: linear-gradient(135deg, #00AEEF 0%, #0288D1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .water-pattern {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10.5%),
+                        radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10.5%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            animation: waterMove 15s linear infinite;
+        }
+        
+        @keyframes waterMove {
+            0% {
+                transform: rotate(0deg) scale(1.5);
+            }
+            100% {
+                transform: rotate(360deg) scale(1.5);
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #00AEEF;
+            box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.2);
+        }
+        
+        .form-input.valid {
+            border-color: #00C853;
+        }
+        
+        .form-input.error {
+            border-color: #FF3D00;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9e9e9e;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-input {
+            display: none;
+        }
+        
+        .checkbox-input:checked + .custom-checkbox {
+            background-color: #00AEEF;
+            border-color: #00AEEF;
+        }
+        
+        .checkbox-input:checked + .custom-checkbox:after {
+            content: '';
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-bottom: 2px;
+        }
+        
+        .forgot-password {
+            color: #00AEEF;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .forgot-password:hover {
+            color: #0288D1;
+            text-decoration: underline;
+        }
+        
+        .login-btn {
+            background-color: #00AEEF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn:hover {
+            background-color: #0288D1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 174, 239, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #9e9e9e;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #e0e0e0;
+        }
+        
+        .divider span {
+            padding: 0 10px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #FF3D00;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .register-link a {
+            color: #00AEEF;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .register-link a:hover {
+            color: #0288D1;
+            text-decoration: underline;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .login-card {
+                flex-direction: column;
+                height: auto;
+                max-width: 400px;
+            }
+            
+            .login-form-container,
+            .login-image {
+                width: 100%;
+            }
+            
+            .login-image {
+                height: 150px;
+                order: -1;
+            }
+            
+            .login-form-container {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Login Form -->
+            <div class="login-form-container">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800">WATERFLOW <span class="text-[#00AEEF]">Smart Water Advisor</span></h1>
+                    <p class="text-gray-600 mt-2">Welcome back! Please login to your account.</p>
+                </div>
+                
+                <form id="loginForm" action="/login" method="POST">
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <span class="input-icon">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                        </span>
+                        <input type="username" id="username" name="username" class="form-input" placeholder="Enter your username" required>
+                        
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <span class="input-icon">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
+                        <div class="error-message" id="password-error">Password must be at least 6 characters</div>
+                    </div>
+                    
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="checkbox-container">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="remember" id="remember">
+                            <span class="custom-checkbox"></span>
+                            <span class="text-gray-700">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    
+                    <!-- Login Button -->
+                    <button type="submit" class="login-btn w-full">Login</button>
+                    
+                    <!-- Registration Link -->
+                    <div class="register-link">
+                        Not registered yet? <a href="/register">Create an account</a>
+                    </div>
+                    
+                    <!-- Social Login -->
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+                    
+                    <div class="social-login">
+                        <div class="social-btn" title="Login with Google">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24">
+                                <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
+                                <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.823l-4.04 3.067A11.965 11.965 0 0 0 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987Z"/>
+                                <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21Z"/>
+                                <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067Z"/>
+                            </svg>
+                        </div>
+                        <div class="social-btn" title="Login with Facebook">
+                            <svg class="w-6 h-6" fill="#1877F2" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Side Image -->
+            <div class="login-image">
+                <div class="water-pattern"></div>
+                <div class="relative z-10 text-center px-6">
+                    <svg class="w-24 h-24 mx-auto mb-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L5.5 8.5C2.5 11.5 2.5 16.5 5.5 19.5C8.5 22.5 13.5 22.5 16.5 19.5C19.5 16.5 19.5 11.5 16.5 8.5L12 2ZM12 16.5C10.6 16.5 9.5 15.4 9.5 14C9.5 13.2 9.9 12.5 10.4 12C10.9 11.5 11.5 10.9 12 10C12.5 10.9 13.1 11.5 13.6 12C14.1 12.5 14.5 13.2 14.5 14C14.5 15.4 13.4 16.5 12 16.5Z"/>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-white mb-2">Smart Water Management</h2>
+                    <p class="text-white text-opacity-90">Track, analyze, and optimize your water usage with our intelligent advisor.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-error');
+            
+            // Email validation
+            function validateEmail() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    emailInput.classList.add('error');
+                    emailInput.classList.remove('valid');
+                    emailError.style.display = 'block';
+                    return false;
+                } else {
+                    emailInput.classList.remove('error');
+                    emailInput.classList.add('valid');
+                    emailError.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Password validation
+            function validatePassword() {
+                if (passwordInput.value.length < 6) {
+                    passwordInput.classList.add('error');
+                    passwordInput.classList.remove('valid');
+                    passwordError.style.display = 'block';
+                    return false;
+                } else {
+                    passwordInput.classList.remove('error');
+                    passwordInput.classList.add('valid');
+                    passwordError.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Event listeners
+            emailInput.addEventListener('blur', validateEmail);
+            passwordInput.addEventListener('blur', validatePassword);
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const isEmailValid = validateEmail();
+                const isPasswordValid = validatePassword();
+                
+                if (isEmailValid && isPasswordValid) {
+                    // For demo purposes, we'll simulate a form submission
+                    const loginBtn = document.querySelector('.login-btn');
+                    const originalText = loginBtn.textContent;
+                    
+                    loginBtn.textContent = 'Logging in...';
+                    loginBtn.disabled = true;
+                    loginBtn.style.opacity = '0.7';
+                    
+                    setTimeout(function() {
+                        // In a real app, this would submit the form to the server
+                        console.log('Form submitted with:', {
+                            email: emailInput.value,
+                            password: passwordInput.value,
+                            remember: document.getElementById('remember').checked
+                        });
+                        
+                        // Simulate redirect to dashboard
+                        alert('Login successful! Redirecting to dashboard...');
+                        loginBtn.textContent = originalText;
+                        loginBtn.disabled = false;
+                        loginBtn.style.opacity = '1';
+                    }, 1500);
+                }
+            });
+            
+            // Add button click animation
+            const loginBtn = document.querySelector('.login-btn');
+            loginBtn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            loginBtn.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            // Social login buttons
+            const socialBtns = document.querySelectorAll('.social-btn');
+            socialBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Social login would be implemented here in a real application.');
+                });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94159b08e366e3b1',t:'MTc0NzUxMTAyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

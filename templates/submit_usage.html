@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WATERFLOW - Input Form</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=YybD3UTLth-Tf9C9JkU-xnsivPiJzxvO2oPY-1TI1G0y51WwaTWHVG7UK32tISajoHXdw7z_d_PWD190OGiwk-H_4O9vzPcPPEHi7ZKRWiP2o8oYB6SLcBtao5qM-Y-PFai5NJy8Fq-H41mrsPUK5B3q4NLkm9492SEjjG5PRKTh9TeKTJcrEYVVGmZS2n0XDFMvleeyqAyKw3cxuqOlPw" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+          
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .status-bar {
+            height: 8px;
+            background: linear-gradient(to right, #00AEEF 0%, #00AEEF 40%, #FF3D00 40%, #FF3D00 100%);
+        }
+        
+        .form-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #00AEEF;
+            box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.2);
+        }
+        
+        .form-input.valid {
+            border-color: #00C853;
+            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #FF3D00;
+            box-shadow: 0 0 0 3px rgba(255, 61, 0, 0.1);
+        }
+        
+        .error-message {
+            color: #FF3D00;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .submit-btn {
+            background-color: #00AEEF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0288D1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 174, 239, 0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 174, 239, 0.1);
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+        
+        .preview-container {
+            background-color: rgba(0, 174, 239, 0.05);
+            border: 1px dashed #00AEEF;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            color: #0288D1;
+            margin-bottom: 10px;
+        }
+        
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .preview-label {
+            color: #555;
+        }
+        
+        .preview-value {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .water-drop {
+            fill: #00AEEF;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .submit-btn:hover svg {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar"></div>
+    
+    <div class="container mx-auto px-4 py-4 flex-1 flex flex-col">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">WATERFLOW <span class="text-[#00AEEF]">Smart Water Advisor</span></h1>
+            <div class="text-sm text-gray-600">Input Form</div>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container flex flex-col justify-center">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Tell us about your water usage</h2>
+                <p class="text-gray-600 mb-8">We'll use this information to personalize your water consumption analytics and help you save water and money.</p>
+                
+                <form id="waterUsageForm" class="md:grid md:grid-cols-2 md:gap-6" action="/submit_usage" method="POST">
+                    <!-- Region Field -->
+                    <div class="form-group">
+                        <label for="region" class="form-label flex items-center">
+                            <div class="icon-container">
+                                <svg class="w-5 h-5 water-drop" viewBox="0 0 24 24">
+                                    <path d="M12 2L5.5 8.5C2.5 11.5 2.5 16.5 5.5 19.5C8.5 22.5 13.5 22.5 16.5 19.5C19.5 16.5 19.5 11.5 16.5 8.5L12 2ZM12 16.5C10.6 16.5 9.5 15.4 9.5 14C9.5 13.2 9.9 12.5 10.4 12C10.9 11.5 11.5 10.9 12 10C12.5 10.9 13.1 11.5 13.6 12C14.1 12.5 14.5 13.2 14.5 14C14.5 15.4 13.4 16.5 12 16.5Z"/>
+                                </svg>
+                            </div>
+                            Select your region
+                        </label>
+                        <select id="region" name="region" class="form-input" required>
+                            <option value="" disabled selected>Choose your region type</option>
+                            <option value="Urban">Urban </option>
+                            <option value="Suburban">Suburban </option>
+                            <option value="Rural">RUral</option>
+                        </select>
+                        <div class="error-message" id="region-error">Please select your region</div>
+                    </div>
+                    
+                    <!-- Number of People Field -->
+                    <div class="form-group">
+                        <label for="number_of_people" class="form-label flex items-center">
+                            <div class="icon-container">
+                                <svg class="w-5 h-5 water-drop" viewBox="0 0 24 24">
+                                    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                                </svg>
+                            </div>
+                            How many people live in your home?
+                        </label>
+                        <input type="number" id="number_of_people" name="number_of_people" min="1" class="form-input" required>
+                        <div class="error-message" id="people-error">Please enter at least 1 person</div>
+                    </div>
+                    
+                    <!-- Actual Usage Field -->
+                    <div class="form-group md:col-span-2">
+                        <label for="actual_usage" class="form-label flex items-center">
+                            <div class="icon-container">
+                                <svg class="w-5 h-5 water-drop" viewBox="0 0 24 24">
+                                    <path d="M12 3L2 12H5V20H19V12H22L12 3ZM12 8.75C12.69 8.75 13.25 9.31 13.25 10C13.25 10.69 12.69 11.25 12 11.25C11.31 11.25 10.75 10.69 10.75 10C10.75 9.31 11.31 8.75 12 8.75ZM17 17H7V15H17V17ZM17 14H7V12H17V14Z"/>
+                                </svg>
+                            </div>
+                            Water used last month (liters)
+                        </label>
+
+                        <input type="number" id="actual_usage" name="actual_usage" min="0" class="form-input" required>
+                        <div class="error-message" id="usage-error">Please enter a valid water usage (0 or more)</div>
+                        <!-- Month Field -->
+<div class="form-group">
+    <label for="usage_month" class="form-label flex items-center">
+        <div class="icon-container">
+            <svg class="w-5 h-5 water-drop" viewBox="0 0 24 24">
+                <path d="M3 4H5H21V6H3V4ZM5 8H19V20H5V8ZM12 13C13.1 13 14 12.1 14 11C14 9.9 13.1 9 12 9C10.9 9 10 9.9 10 11C10 12.1 10.9 13 12 13Z" />
+            </svg>
+        </div>
+        Month of Usage
+    </label>
+    <select id="month" name="month" class="form-input" required>
+        <option value="" disabled selected>Select month</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
+</div>
+
+<!-- Year Field -->
+<div class="form-group">
+    <label for="year" class="form-label flex items-center">
+        <div class="icon-container">
+            <svg class="w-5 h-5 water-drop" viewBox="0 0 24 24">
+                <path d="M3 6H21V8H3V6ZM3 10H21V12H3V10ZM3 14H15V16H3V14ZM3 18H11V20H3V18Z" />
+            </svg>
+        </div>
+        Year of Usage
+    </label>
+    <input type="number" id="year" name="year" min="2000" max="2100" placeholder="e.g., 2025" class="form-input" required>
+</div>
+
+
+                        
+</div>
+                    
+                    
+                    
+                    <!-- Submit Button -->
+                    <div class="form-group md:col-span-2 mt-4">
+                        <button type="submit" class="submit-btn w-full">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            Get My Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('waterUsageForm');
+            const regionInput = document.getElementById('region');
+            const peopleInput = document.getElementById('number_of_people');
+            const usageInput = document.getElementById('actual_usage');
+            const previewContainer = document.getElementById('preview-container');
+            const estIdealUsage = document.getElementById('est-ideal-usage');
+            const potentialSavings = document.getElementById('potential-savings');
+            
+            // Validation functions
+            function validateRegion() {
+                const errorElement = document.getElementById('region-error');
+                if (!regionInput.value) {
+                    regionInput.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                } else {
+                    regionInput.classList.remove('error');
+                    regionInput.classList.add('valid');
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            function validatePeople() {
+                const errorElement = document.getElementById('people-error');
+                if (!peopleInput.value || peopleInput.value < 1) {
+                    peopleInput.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                } else {
+                    peopleInput.classList.remove('error');
+                    peopleInput.classList.add('valid');
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            function validateUsage() {
+                const errorElement = document.getElementById('usage-error');
+                if (!usageInput.value || usageInput.value < 0) {
+                    usageInput.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                } else {
+                    usageInput.classList.remove('error');
+                    usageInput.classList.add('valid');
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+            }
+            
+           
+           
+                    const submitBtn = document.querySelector('.submit-btn');
+                    submitBtn.innerHTML = 'Processing...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(function() {
+                        // In a real app, this would redirect to the dashboard
+                        alert('Form submitted successfully! In a real app, you would be redirected to your personalized dashboard.');
+                        submitBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg> Get My Report';
+                        submitBtn.disabled = false;
+                    }, 1000);
+                }
+            });
+            
+            // Try to get user's location for region auto-fill
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // This is a simplified example - in a real app you would use the coordinates
+                    // to determine the actual region via a geocoding service
+                    console.log("Location detected, could be used to auto-fill region");
+                    // For demo purposes, we'll just select a random region
+                    const regions = ['north', 'south', 'east', 'west', 'central'];
+                    const randomRegion = regions[Math.floor(Math.random() * regions.length)];
+                    regionInput.value = randomRegion;
+                    validateRegion();
+                });
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94157a1b02326923',t:'MTc0NzUwOTY3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

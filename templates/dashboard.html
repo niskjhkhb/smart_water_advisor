@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WATERFLOW - Smart Water Advisor</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=smpTnqstFQf17PJrCT4sjcIfRjLthfVH_xJ0UjawP_uqhwtx1Z0zxb8kImDJIpbuzY6rzZIbqe19z9ck5CR_axQfrTOp_DF4TLbeS2wI7CV3WA46mfl9l9tFuoooXhnEbo2AKZLHIaqxAcmBouWgKj6TK3_3sUEX5L2BJ__gZfj65JCWk_ACmjnj_vL9653OWo1cH2kbuulbElcsgx22GQ" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .nav-link {
+            position: relative;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .status-bar {
+            height: 8px;
+            background: linear-gradient(to right, #00AEEF 0%, #00AEEF 40%, #FF3D00 40%, #FF3D00 100%);
+        }
+        
+        .glass-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 20px; /* Moved glass further up */
+        }
+        
+        .glass {
+            position: relative;
+            width: 30%; /* Even slimmer glass */
+            height: 70%; /* Slightly shorter */
+            margin: 0 auto;
+            border-radius: 8px 8px 20px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid #0288D1;
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.1);
+            overflow: hidden;
+            /* Glass-like effect */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        /* Glass rim effect */
+        .glass:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px 8px 0 0;
+        }
+        
+        /* Glass shine effect */
+        .glass:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5px;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 1px;
+        }
+        
+        .water-ideal {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 65%;
+            background-color: #00AEEF;
+            border-radius: 0 0 17px 17px;
+            /* Water effect */
+            background: linear-gradient(to bottom, rgba(0, 174, 239, 0.8), rgba(0, 174, 239, 1));
+        }
+        
+        .water-overuse {
+            position: absolute;
+            bottom: 65%;
+            width: 100%;
+            height: 35%;
+            background-color: #FF3D00;
+            /* Water effect */
+            background: linear-gradient(to bottom, rgba(255, 61, 0, 0.8), rgba(255, 61, 0, 1));
+        }
+        
+        .water-line {
+            position: absolute;
+            bottom: 65%;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: 10;
+        }
+        
+        .percentage-badge {
+            position: absolute;
+            top: 15%; /* Positioned in red area */
+            right: 50%;
+            transform: translateX(50%);
+            background-color: white;
+            color: #FF3D00;
+            border: 2px solid #FF3D00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 20;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .usage-message {
+            margin-top: 15px;
+            font-weight: 500;
+            color: #FF3D00;
+            text-align: center;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+        
+        .tip-card {
+            background-color: white;
+            border-left: 4px solid #00AEEF;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tip-icon {
+            background-color: #e6f7ff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center navbar-container">
+            <a href="#" class="flex items-center">
+                <svg class="w-10 h-10 text-[#00AEEF]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L5.5 8.5C2.5 11.5 2.5 16.5 5.5 19.5C8.5 22.5 13.5 22.5 16.5 19.5C19.5 16.5 19.5 11.5 16.5 8.5L12 2ZM12 16.5C10.6 16.5 9.5 15.4 9.5 14C9.5 13.2 9.9 12.5 10.4 12C10.9 11.5 11.5 10.9 12 10C12.5 10.9 13.1 11.5 13.6 12C14.1 12.5 14.5 13.2 14.5 14C14.5 15.4 13.4 16.5 12 16.5Z"/>
+                </svg>
+                <span class="ml-2 text-xl font-bold">Smart Water Advisor</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="nav-link">Home</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#benefits" class="nav-link">Benefits</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="/login" class="btn-secondary">Login</a>
+                <a href="/register" class="btn-primary">Get Started</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#benefits" class="nav-link">Benefits</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <div class="flex flex-col space-y-3 pt-3 border-t border-gray-200">
+                    <a href="/login" class="btn-secondary text-center">Login</a>
+                    <a href="/register" class="btn-primary text-center">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Status Bar -->
+    <div class="status-bar"></div>
+    
+    <div class="container mx-auto px-4 py-2 h-full flex flex-col">
+        <!-- Dashboard Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">WATERFLOW <span class="text-[#00AEEF]">Smart Water Advisor</span></h1>
+            <div class="text-sm text-gray-600">{{ usage_data.month }}, {{ usage_data.year }}</div>
+        </div>
+        
+        <!-- Top Half: Charts and Visual Feedback -->
+        <div class="flex flex-col md:flex-row gap-6 h-1/2 mb-6">
+            <!-- Bar Chart - Made slimmer -->
+            <div class="w-full md:w-1/2 card p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Monthly Water Consumption </h2>
+                <div class="h-[calc(100%-40px)]">
+                    <canvas id="waterUsageChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Glass Visualization - Increased width to balance -->
+            <div class="w-full md:w-1/2 card p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Current Usage</h2>
+                {% for record in usage_data %}
+    <div class="glass-container">
+        <div class="glass">
+            <div class="water-ideal" style="height: {{ record.predicted_usage }}%;"></div>
+            <div class="water-overuse" style="height: {{ record.actual_usage }}%;"></div>
+            <div class="water-line"></div>
+            <div class="percentage-badge">
+                {% if record.actual_usage > record.predicted_usage %}
+                    +{{ ((record.actual_usage - record.predicted_usage) / record.predicted_usage) | round(2) }}%
+                {% else %}
+                    -{{ ((record.predicted_usage - record.actual_usage) / record.predicted_usage) | round(2) }}%
+                {% endif %}
+            </div>
+        </div>
+        <p class="usage-message">
+            {% if record.actual_usage > record.predicted_usage %}
+                You are using more than {{ ((record.actual_usage - record.predicted_usage) / record.predicted_usage) | round(2) }}% of expected water.
+            {% else %}
+                Great job! You're using {{ ((record.predicted_usage - record.actual_usage) / record.predicted_usage) | round(2) }}% less than expected.
+            {% endif %}
+        </p>
+    </div>
+{% endfor %}
+            </div>
+        </div>
+        
+        <!-- Bottom Half: Bill, Impact, and Tips -->
+        <div class="flex flex-col md:flex-row gap-6 h-1/3">
+           {% for record in usage_data %}
+<div class="w-full md:w-1/3 card p-4">
+    <h2 class="text-lg font-semibold text-gray-700 mb-3">Estimated Bill</h2>
+    <div class="flex items-center justify-center h-[calc(100%-40px)]">
+        <div class="text-center">
+            <p class="text-4xl font-bold text-[#0288D1]">{{ record.estimated_bill }}Dh</p>
+            <p class="text-sm text-gray-500 mt-2">Based on current usage</p>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+       {% for record in usage_data %}
+    <div class="w-full md:w-1/3 card p-4">
+        <h2 class="text-lg font-semibold text-gray-700 mb-3">Overuse Impact</h2>
+        <div class="flex items-center mb-4">
+            <div class="text-4xl font-bold text-[#FF3D00] mr-4">
+                {% if record.actual_usage > record.predicted_usage %}
+                    +{{ ((record.actual_usage - record.predicted_usage) / record.predicted_usage) | round(2) }}%
+                {% else %}
+                    {{ ((record.predicted_usage - record.actual_usage) / record.predicted_usage) | round(2) }}% Saved
+                {% endif %}
+            </div>
+            <div class="border-l-2 border-gray-200 pl-4">
+                {% if record.actual_usage > record.predicted_usage %}
+                    <p class="text-sm text-gray-600 mb-2">Your excess water could be used more efficiently.</p>
+                    <p class="text-sm">Try reducing usage to help conserve resources.</p>
+                {% else %}
+                    <p class="text-sm text-green-600 font-semibold">Great job! You’ve saved {{ ((record.predicted_usage - record.actual_usage) / record.predicted_usage) | round(2) }}% of water this month! Keep up the excellent work. 🚀</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+            <!-- Water-Saving Tips Box -->
+            <div class="w-full md:w-1/3 card p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-3">Water-Saving Tips</h2>
+                <div class="overflow-y-auto h-[calc(100%-40px)]">
+                    <div class="tip-card flex items-center">
+                        <div class="tip-icon">
+                            <svg class="w-5 h-5 text-[#00AEEF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm">Turn off tap while brushing teeth</p>
+                    </div>
+                    <div class="tip-card flex items-center">
+                        <div class="tip-icon">
+                            <svg class="w-5 h-5 text-[#00AEEF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm">Use shorter shower cycles</p>
+                    </div>
+                    <div class="tip-card flex items-center">
+                        <div class="tip-icon">
+                            <svg class="w-5 h-5 text-[#00AEEF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm">Run full loads of laundry</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var usageData = {{ usage_data | tojson }};
+        
+        var labels = usageData.map(record => record.month + "/" + record.year);
+        var actualUsage = usageData.map(record => record.actual_usage);
+        var predictedUsage = usageData.map(record => record.predicted_usage);
+
+        var ctx = document.getElementById('waterUsageChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels, 
+                datasets: [
+                    {
+                        label: 'Ideal Usage',
+                        data: predictedUsage,
+                        backgroundColor: '#00AEEF',
+                        borderColor: '#00AEEF',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Actual Usage',
+                        data: actualUsage,
+                        backgroundColor: actualUsage.map((value, index) =>
+                            value > predictedUsage[index] ? '#FF3D00' : '#00AEEF'
+                        ),
+                        borderColor: actualUsage.map((value, index) =>
+                            value > predictedUsage[index] ? '#FF3D00' : '#00AEEF'
+                        ),
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Liters Used' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Month' }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    });
+</script>
+</html>
